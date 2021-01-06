@@ -4,17 +4,17 @@ func routes(_ app: Application) throws {
     var msc = MarketServiceController()
     var websocketClient = WebSocketClient()
     
-    app.get { req in
-        return "It works!"
+    app.get { req -> EventLoopFuture<String>  in
+        return try msc.getInformationAboutClient(req)
     }
 //
     app.get("register") { req -> EventLoopFuture<String>  in
         return try msc.registerInMarketAPI(req)
     }
     
-    app.get("orders") { req -> EventLoopFuture<[String]>  in
-        return try msc.getOrderList(req)
-    }
+//    app.get("orders") { req -> EventLoopFuture<[String]>  in
+//        return try msc.getOrderList(req)
+//    }
     
     app.get("socket") { (req) -> EventLoopFuture<String>  in
         websocketClient.connect(req)
@@ -28,7 +28,9 @@ func routes(_ app: Application) throws {
         return Share.query(on: req.db).all()
     }
     
-    
+    app.get("balance") { req -> EventLoopFuture<String>  in
+        return try msc.setBalanceInSandbox(req)
+    }
     
 }
 

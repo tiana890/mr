@@ -16,6 +16,13 @@ final class MarketServiceController {
     
     var accountInfo: AccountInfo?
     
+    func getInformationAboutClient(_ req: Request) throws -> EventLoopFuture<String> {
+        if let accInfo = accountInfo {
+            return req.eventLoop.future("Client with brokerID \(accInfo.brokerAccountId!) and trackingID \(accInfo.trackingId!) was registered")
+        }
+        return req.eventLoop.future("Client is not registered")
+    }
+    
     func registerInMarketAPI(_ req: Request) throws -> EventLoopFuture<String> {
         var headers = HTTPHeaders()
         headers.add(name: .authorization, value: "Bearer " + authToken)
@@ -31,12 +38,30 @@ final class MarketServiceController {
         }
     }
     
-    func setBalanceInSandbox(_ req: Request) throws -> EventLoopFuture<ClientResponse> {
+    func setBalanceInSandbox(_ req: Request) throws -> EventLoopFuture<String> {
         var headers = HTTPHeaders()
         headers.add(name: .authorization, value: "Bearer " + authToken)
-        let url = sandboxURL + "positions/balance"
+        let url = sandboxURL + "currencies/balance"
         print(URI(string: url))
-        return req.client.post(URI(string: url), headers: headers)
+        return req.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
+            let balanceParam = BalanceParam(currency: "RUB", balance: 2000)
+            try clientRequest.content.encode(balanceParam)
+        }).flatMapThrowing { (clientResponse) -> String in
+            print(clientResponse.content)
+            return "OK"
+        }
+    }
+    
+    func getBalanceInfo(_ req: Request) throws -> EventLoopFuture<String> {
+        var headers = HTTPHeaders()
+        headers.add(name: .authorization, value: "Bearer " + authToken)
+        let url = sandboxURL + "portfolio/currencies"
+        print(URI(string: url))
+        return req.client.post(URI(string: url), headers: headers).flatMapThrowing { (clientResponse) -> String in
+            
+            print(clientResponse.content)
+            return "OK"
+        }
     }
     
     

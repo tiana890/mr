@@ -13,6 +13,8 @@ public func configure(_ app: Application) throws {
     app.migrations.add(CreateShare())
     app.migrations.add(CreateGlass())
     
+    app.logger.logLevel = .debug
+    
     // register routes
     try routes(app)
 
