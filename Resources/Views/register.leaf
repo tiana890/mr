@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html>
+    <h1>Register result</h1>
+        <h2>#(result)</h2>
+        <td><a href="/">back</a></td>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <h1>Balance (sandbox)</h1>
+    <h2>Current balance</h2>
+    <ul>
+        #for(currency in currencies):
+        <li>#(currency)</p></li>
+        #endfor
+    </ul>
+    <form method="POST" action="/setbalance">
+        <div class="input-group">
+          <input type="text" name="balance" class="form-control" value=#(balanceParam.balance)>
+          <span class="input-group-btn">
+            <input class="btn btn-success" type="submit" value=#(balanceParam.currency) />
+          </span>
+        </div>
+      </form>
+</body>
+</html>

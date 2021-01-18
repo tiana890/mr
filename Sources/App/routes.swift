@@ -1,15 +1,19 @@
 import Vapor
+import Leaf
 
 func routes(_ app: Application) throws {
     var msc = MarketServiceController()
     var websocketClient = WebSocketClient()
     
-    app.get { req -> EventLoopFuture<String>  in
-        return try msc.getInformationAboutClient(req)
+//    app.get { req -> EventLoopFuture<String>  in
+//        return try msc.getInformationAboutClient(req)
+//    }
+    app.get { req in
+        try msc.indexHandler(req)
     }
-//
-    app.get("register") { req -> EventLoopFuture<String>  in
-        return try msc.registerInMarketAPI(req)
+
+    app.get("register") { req in
+        try msc.registerInMarketAPI(req)
     }
     
 //    app.get("orders") { req -> EventLoopFuture<[String]>  in
@@ -28,9 +32,11 @@ func routes(_ app: Application) throws {
         return Share.query(on: req.db).all()
     }
     
-    app.get("balance") { req -> EventLoopFuture<String>  in
-        return try msc.setBalanceInSandbox(req)
+    app.get("balance") { req  in
+        return try msc.getBalanceInfo(req)
     }
+    
+    app.post("setbalance", use: msc.setBalanceInSandbox(_:))
     
 }
 

@@ -6,8 +6,13 @@
 //
 
 import Vapor
+import Fluent
+import LeafKit
+
 
 final public class BalanceParam: Content {
+ 
+
     /*{
       "currency": "RUB",
       "balance": 0
@@ -41,6 +46,14 @@ final public class BalanceParam: Content {
 //    }
     
 }
+
+extension BalanceParam: LeafDataRepresentable {
+    public var leafData: LeafData {
+        .dictionary(["currency": .string(currency), "balance": .int(balance)])
+    }
+}
+
+
 extension BalanceParam: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = try encoder.container(keyedBy: CodingKeys.self)
@@ -51,3 +64,4 @@ extension BalanceParam: Encodable {
         throw EncodingError.invalidValue(BalanceParam.self, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Wrong type for Balance Param"))
     }
 }
+
