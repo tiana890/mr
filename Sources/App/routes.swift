@@ -16,27 +16,31 @@ func routes(_ app: Application) throws {
         try msc.registerInMarketAPI(req)
     }
     
-//    app.get("orders") { req -> EventLoopFuture<[String]>  in
-//        return try msc.getOrderList(req)
-//    }
+    app.get("orders") { req   in
+        return try msc.getOrders(req)
+    }
     
     app.get("socket") { (req) -> EventLoopFuture<String>  in
         websocketClient.connect(req)
         return  req.eventLoop.future("OK")
     }
     
-    app.get("shares") { req -> EventLoopFuture<[Share]> in
-        //let profile = try req.content.decode(Profile.self)
-        var share = Share(name: "ET", figi: "BBG000BM2FL9")
-        share.create(on: req.db)
-        return Share.query(on: req.db).all()
-    }
+//    app.get("shares") { req -> EventLoopFuture<[Share]> in
+//        //let profile = try req.content.decode(Profile.self)
+//        var share = Share(name: "ET", figi: "BBG000BM2FL9")
+//        share.create(on: req.db)
+//        return Share.query(on: req.db).all()
+//    }
     
     app.get("balance") { req  in
         return try msc.getBalanceInfo(req)
     }
     
     app.post("setbalance", use: msc.setBalanceInSandbox(_:))
+    
+    app.get("stocks") { req  in
+        return try msc.getStocks(req)
+    }
     
 }
 

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <h1>Stocks (sandbox)</h1>
+    <h2>Current stocks</h2>
+    <ul>
+        #for(stock in stocks):
+        <li>#(stock)</p></li>
+        #endfor
+    </ul>
+    <br>
+    <br>
+  </form>
+</body>
+</html>

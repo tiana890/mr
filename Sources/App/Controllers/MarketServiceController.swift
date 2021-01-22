@@ -82,6 +82,33 @@ final class MarketServiceController {
         }
     }
     
+    func getOrders(_ req: Request) throws -> EventLoopFuture<View> {
+        var headers = HTTPHeaders()
+        headers.add(name: .authorization, value: "Bearer " + authToken)
+        let url = sandboxURL + "orders"
+        //https://api-invest.tinkoff.ru/openapi/sandbox/orders
+        print(URI(string: url))
+        return req.client.get(URI(string: url), headers: headers).flatMapThrowing { (clientResponse) -> Orders in
+            let orders = try clientResponse.content.decode(Orders.self)
+            return orders
+        }.flatMap { (value) -> EventLoopFuture<View> in
+            return req.leaf.render("orders", OrdersContext(orders: value))
+        }
+    }
+    
+    func getStocks(_ req: Request) throws -> EventLoopFuture<View> {
+        var headers = HTTPHeaders()
+        headers.add(name: .authorization, value: "Bearer " + authToken)
+        let url = sandboxURL + "market/stocks"
+        print(URI(string: url))
+        return req.client.get(URI(string: url), headers: headers).flatMapThrowing { (clientResponse) -> Stocks in
+            let stocks = try clientResponse.content.decode(Stocks.self)
+            return stocks
+        }.flatMap { (value) -> EventLoopFuture<View> in
+            return req.leaf.render("stocks", StockContext(stocks: value))
+        }
+    }
+    
     func indexHandler(_ req: Request) throws -> EventLoopFuture<View> {
         if let accInfo = self.accountInfo {
             return try req.view.render("index", ["accountInfo": accInfo.brokerAccountId])
