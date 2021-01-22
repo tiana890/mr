@@ -9,13 +9,13 @@
     </ul>
     <br>
     <br>
-    <form method="POST" action="/makeorder">
-    <div class="input-group">
-      <input type="text" name="balance" class="form-control" value=#(balanceParam.balance)>
-      <span class="input-group-btn">
-        <input class="btn btn-success" type="submit" value=#(balanceParam.currency) />
-      </span>
-    </div>
+    <form method="POST" action="/setorder">
+        <div class="input-group">
+          <input type="text" name="balance" class="form-control">
+          <span class="input-group-btn">
+            <input class="btn btn-success" type="submit"/>
+          </span>
+        </div>
   </form>
 </body>
 </html>
