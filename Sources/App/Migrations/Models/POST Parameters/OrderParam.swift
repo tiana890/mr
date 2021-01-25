@@ -10,7 +10,8 @@ import Fluent
 import LeafKit
 
 public enum Operation: String {
-    case buy, sell
+    case buy = "Buy"
+    case sell = "Sell"
 }
 
 final public class OrderParam: Content {
@@ -60,7 +61,9 @@ extension OrderParam: Encodable {
         var container = try encoder.container(keyedBy: CodingKeys.self)
         try container.encode(lots, forKey: .lots)
         try container.encode(operation.rawValue, forKey: .operation)
-        try container.encode(price, forKey: .price)
+        if price != 0 {
+            try container.encode(price, forKey: .price)
+        }
         return
         
         throw EncodingError.invalidValue(OrderParam.self, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Wrong type for LimitOrderParam"))

@@ -51,8 +51,11 @@ func routes(_ app: Application) throws {
     }
     
     app.get("job") { req -> EventLoopFuture<String> in
-        return req.queue.dispatch(OrderJob.self, OrderInfo(to: "Contact", message: "aejfclieusmhv")).map{ "OK" }
+        let orderInfo = OrderInfo(to: "Contact", message: "12345")
+        //return req.queue.dispatch(OrderJob.self, orderInfo, delayUntil: ).map{ "OK" }
+        let date = Date().addingTimeInterval(10)
         
+        return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: JobIdentifier(string: orderInfo.message)).map { "OK" }
     }
 }
 

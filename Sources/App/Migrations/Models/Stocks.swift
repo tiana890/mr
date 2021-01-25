@@ -65,6 +65,11 @@ final public class Stock: Content {
             Stock.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for Stock"))
     }
 
+//    extension Stock : LeafDataRepresentable {
+//        public var leafData: LeafData {
+//            return .dictionary(["figi": .string(figi), "ticker": .string(ticker), "lot": .])
+//        }
+//    }
 }
 
 final public class Stocks: Content {

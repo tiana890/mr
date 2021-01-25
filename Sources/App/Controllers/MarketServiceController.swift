@@ -121,6 +121,7 @@ final class MarketServiceController {
         headers.add(name: .authorization, value: "Bearer " + authToken)
         let url = sandboxURL + "portfolio"
         print(URI(string: url))
+        print("Current date is \(Date())")
         return req.client.get(URI(string: url), headers: headers).flatMapThrowing { (clientResponse) -> Portfolio in
             let portfolio = try clientResponse.content.decode(Portfolio.self)
             return portfolio
