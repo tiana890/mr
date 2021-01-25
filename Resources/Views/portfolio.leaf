@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
     <h1>Portfolio (sandbox)</h1>
-    <ul>
+    <table cellspacing="15" cellpadding="10" alignment="left" rules="rows" rules="groups" frame="border">
+        <tr>
+            <th>Название</th>
+            <th>Тикер</th>
+            <th>Баланс</th>
+        </tr>
         #for(instrument in instruments):
-        <li>#(instrument)</p></li>
+            <tr>
+                <td>#(instrument.name)</td><td>#(instrument.ticker)</td><td>#(instrument.balance)</td>
+            </tr>
         #endfor
-    </ul>
+    </table>
     <br>
     <br>
 </body>

@@ -63,12 +63,19 @@ final public class Instrument: Content {
     }
     
     public func encode(to encoder: Encoder) throws {
+        var container = try encoder.container(keyedBy: InstrumentKeys.self)
+        try container.encode(figi, forKey: .figi)
+        try container.encode(name, forKey: .name)
+        try container.encode(balance, forKey: .balance)
+        try container.encode(ticker, forKey: .ticker)
+        
+        return
         throw EncodingError.invalidValue(Instrument.self, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Wrong type for Instrument"))
     }
 }
 
 extension Instrument : LeafDataRepresentable {
     public var leafData: LeafData {
-        .string("name: \(self.name) balance: \(self.balance) type: \(self.instrumentType?.rawValue)")
+        .dictionary(["figi": .string(figi), "name": .string(name), "balance": .int(balance), "ticker": .string(ticker)])
     }
 }
