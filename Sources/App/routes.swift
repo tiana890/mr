@@ -39,7 +39,7 @@ func routes(_ app: Application) throws {
     app.post("setbalance", use: msc.setBalanceInSandbox(_:))
     
     app.get("stocks") { req  in
-        return try msc.getStocks(req)
+        return try msc.getStocksView(req)
     }
     
     app.post("setorder", use: msc.setOrderInSandbox(_:))

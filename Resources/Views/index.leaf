@@ -7,7 +7,7 @@
             <li><td><a href="/balance">BALANCE INFORMATION</a></td></li>
             <li><td><a href="/orders">ORDERS LIST</a></td></li>
             <li><td><a href="/stocks">STOCK LIST</a></td></li>
-            <li><td><a href="/portfolio">STOCK LIST</a></td></li>
+            <li><td><a href="/portfolio">PORTFOLIO</a></td></li>
         </ul>
      #else:
         <h2>Client is not registered</h2>
