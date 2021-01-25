@@ -1,5 +1,7 @@
 import Vapor
 import Leaf
+import Queues
+import Redis
 
 func routes(_ app: Application) throws {
     var msc = MarketServiceController()
@@ -46,6 +48,11 @@ func routes(_ app: Application) throws {
     
     app.get("portfolio") { req  in
         return try msc.getPortfolio(req)
+    }
+    
+    app.get("job") { req -> EventLoopFuture<String> in
+        return req.queue.dispatch(OrderJob.self, OrderInfo(to: "Contact", message: "aejfclieusmhv")).map{ "OK" }
+        
     }
 }
 

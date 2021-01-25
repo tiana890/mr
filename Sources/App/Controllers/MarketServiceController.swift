@@ -11,6 +11,7 @@ import AsyncHTTPClient
 import Fluent
 import LeafKit
 import Leaf
+import Redis
 
 final class MarketServiceController {
     let authToken  = "t.kvibl5piK_kk9pIk4OGNmAxUyd4gybhiVvYr2DN1xeJr9XGJOVQyUBKY02RRq4Pi8vKfj1m296g1TbkmNxltuA"
