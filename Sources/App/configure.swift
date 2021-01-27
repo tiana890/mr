@@ -19,11 +19,11 @@ public func configure(_ app: Application) throws {
     
     app.logger.logLevel = .debug
     
-    app.redis.configuration = try RedisConfiguration(hostname: "localhost")
-    try app.queues.use(.redis(url: "redis://localhost:6379"))
+    app.redis.configuration = try RedisConfiguration(hostname: "127.0.0.1")
+    try app.queues.use(.redis(url: "redis://127.0.0.1:6379"))
     
     app.http.server.configuration.hostname = "3.15.176.154"
-    app.http.server.configuration.port = 8080
+    //app.http.server.configuration.port = 8080
     
     let orderJob = OrderJob()
     app.queues.add(orderJob)
