@@ -99,12 +99,12 @@ final class MarketServiceController {
     func setOrderInSandbox(_ req: Request) throws -> EventLoopFuture<View> {
         var headers = HTTPHeaders()
         headers.add(name: .authorization, value: "Bearer " + authToken)
-        let url = sandboxURL + "orders/market-order?figi=BBG000BM2FL9"
+        let url = sandboxURL + "orders/market-order?figi=BBG002293PJ4"
         print(URI(string: url))
     
         return req.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
             print(req.parameters)
-            var orderParam = OrderParam(lots: 5, operation: .buy)
+            var orderParam = OrderParam(lots: 1, operation: .sell)
             //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
             try clientRequest.content.encode(orderParam)
         }).flatMap { (cr) -> EventLoopFuture<View> in
@@ -114,6 +114,25 @@ final class MarketServiceController {
                 return req.view.render("index")
             }
         }
+    }
+    
+    func makeJob(_ req: Request) throws -> EventLoopFuture<View> {
+//        return req.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
+//            print(req.parameters)
+//            var orderParam = OrderParam(lots: 5, operation: .buy)
+//            //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
+//            try clientRequest.content.encode(orderParam)
+//        }).flatMap { (cr) -> EventLoopFuture<View> in
+//            do {
+//                return try self.getPortfolio(req)
+//            } catch {
+                return req.view.render("index")
+//            }
+//        }
+    }
+    
+    func makeOrder(_ req: Request) throws -> EventLoopFuture<View> {
+        return req.leaf.render("makeorder")
     }
     
     func getPortfolio(_ req: Request) throws -> EventLoopFuture<View> {

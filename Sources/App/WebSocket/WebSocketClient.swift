@@ -6,7 +6,6 @@
 //
 import Vapor
 
-
 open class WebSocketClient {
     let authToken  = "t.kvibl5piK_kk9pIk4OGNmAxUyd4gybhiVvYr2DN1xeJr9XGJOVQyUBKY02RRq4Pi8vKfj1m296g1TbkmNxltuA"
     let sandboxURL = "https://api-invest.tinkoff.ru/openapi/sandbox/sandbox/"

@@ -45,6 +45,11 @@ func routes(_ app: Application) throws {
     }
     
     app.post("setorder", use: msc.setOrderInSandbox(_:))
+    //app.post("makejob", use: msc.makeJob(_:))
+    
+    app.get("makeorder") { req in
+        return try msc.makeOrder(req)
+    }
     
     app.get("portfolio") { req  in
         return try msc.getPortfolio(req)

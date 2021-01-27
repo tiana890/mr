@@ -14,6 +14,6 @@
             <input class="btn btn-success" type="submit" value=#(balanceParam.currency) />
           </span>
         </div>
-      </form>
+    </form>
 </body>
 </html>

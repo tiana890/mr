@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <h1>Make scheduling order(sandbox)</h1>
+    <br>
+    <form method="POST" action="/makejob">
+        <div class="input-group">
+          <input type="text" name="balance" class="form-control">
+          <span class="input-group-btn">
+            <input class="btn btn-success" type="submit" value="FIGI"/>
+          </span>
+        </div>
+        <br>
+        <div class="input-group">
+          <input type="text" name="balance" class="form-control">
+          <span class="input-group-btn">
+            <input class="btn btn-success" type="submit"/>
+          </span>
+        </div>
+        <label for="start">Start date:</label>
+        <input type="date" id="start" name="trip-start"
+            value="2018-07-22"
+            min="2018-01-01" max="2018-12-31">
+    
+        <input id="datetime" type="datetime-local">
+    </form>
+</body>
+</html>
