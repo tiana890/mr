@@ -22,8 +22,8 @@ public func configure(_ app: Application) throws {
     app.redis.configuration = try RedisConfiguration(hostname: "localhost")
     try app.queues.use(.redis(url: "redis://localhost:6379"))
     
-    //app.http.server.configuration.hostname = "3.15.176.154"
-    //app.http.server.configuration.port = 8080
+    app.http.server.configuration.hostname = "3.132.85.134"
+    app.http.server.configuration.port = 8080
     
     let orderJob = OrderJob()
     app.queues.add(orderJob)
