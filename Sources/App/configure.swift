@@ -28,8 +28,8 @@ public func configure(_ app: Application) throws {
     let orderJob = OrderJob()
     app.queues.add(orderJob)
 
-//    try app.queues.startScheduledJobs()
-//    try app.queues.startInProcessJobs()
+    try app.queues.startScheduledJobs()
+    try app.queues.startInProcessJobs()
     
     // register routes
     try routes(app)
