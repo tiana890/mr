@@ -3,8 +3,9 @@ import Foundation
 import Queues
 
 struct OrderInfo: Codable {
-    let to: String
-    let message: String
+    let figi: String
+    let priceHigh: Double
+    let priceLow: Double
 }
 
 struct OrderJob: Job {
@@ -18,17 +19,24 @@ struct OrderJob: Job {
         // This is where you would send the email
         var headers = HTTPHeaders()
         headers.add(name: .authorization, value: "Bearer " + authToken)
-        let url = sandboxURL + "orders/market-order?figi=BBG000BM2FL9"
+        let url = sandboxURL + "orders/market-order?figi=\(payload.figi)"
         print(URI(string: url))
-    
-        return context.application.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
-            //print(req.parameters)
-            var orderParam = OrderParam(lots: 1, operation: .buy)
-            //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
-            try clientRequest.content.encode(orderParam)
-        }).flatMap { (cr) -> EventLoopFuture<Void> in
-            return context.eventLoop.future()
+        let wb = WebSocketClient(figi: payload.figi)
+        return wb.connect(eventLoop: context.eventLoop) { (glass) -> EventLoopFuture<Void> in
+            if let price = glass?.bids.first?.price, price < payload.priceHigh, price > payload.priceLow  {
+                return context.application.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
+                    //print(req.parameters)
+                    var orderParam = OrderParam(lots: 1, operation: .buy)
+                    //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
+                    try clientRequest.content.encode(orderParam)
+                }).flatMap { (cr) -> EventLoopFuture<Void> in
+                    return context.eventLoop.future()
+                }
+            } else {
+                return context.eventLoop.future()
+            }
         }
+
     }
 
     func error(_ context: QueueContext, _ error: Error, _ payload: OrderInfo) -> EventLoopFuture<Void> {

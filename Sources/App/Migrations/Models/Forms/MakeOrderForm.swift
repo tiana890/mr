@@ -1,8 +1,8 @@
-//
-//  File.swift
-//  
-//
-//  Created by Marina on 26.01.2021.
-//
+import Vapor
 
-import Foundation
+struct MakeOrderForm: Content {
+    var date: String?
+    var figi: String
+    var highPrice: String
+    var lowPrice: String
+}

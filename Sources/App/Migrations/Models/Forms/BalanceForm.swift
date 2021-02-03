@@ -1,8 +1,5 @@
-//
-//  File.swift
-//  
-//
-//  Created by Marina on 26.01.2021.
-//
+import Vapor
 
-import Foundation
+struct BalanceForm: Content {
+    var balance: Int
+}

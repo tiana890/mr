@@ -12,6 +12,7 @@ import Fluent
 import LeafKit
 import Leaf
 import Redis
+import Queues
 
 final class MarketServiceController {
     let authToken  = "t.kvibl5piK_kk9pIk4OGNmAxUyd4gybhiVvYr2DN1xeJr9XGJOVQyUBKY02RRq4Pi8vKfj1m296g1TbkmNxltuA"
@@ -116,20 +117,27 @@ final class MarketServiceController {
         }
     }
     
-    func makeJob(_ req: Request) throws -> EventLoopFuture<View> {
-//        return req.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
-//            print(req.parameters)
-//            var orderParam = OrderParam(lots: 5, operation: .buy)
-//            //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
-//            try clientRequest.content.encode(orderParam)
-//        }).flatMap { (cr) -> EventLoopFuture<View> in
-//            do {
-//                return try self.getPortfolio(req)
-//            } catch {
-                return req.view.render("index")
-//            }
+    func makeJob(_ req: Request) throws -> EventLoopFuture<Response> {
+//        let makeOrderForm = try req.content.decode(MakeOrderForm.self)
+//        let orderInfo = OrderInfo(figi: makeOrderForm.figi, priceHigh: Double(makeOrderForm.highPrice)!, priceLow: Double(makeOrderForm.lowPrice)!)
+//        let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
+//        let date = Date().addingTimeInterval(10)
+//        return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).flatMap { () -> EventLoopFuture<View> in
+//            return req.view.render("index")
 //        }
+        
+        let orderInfo = OrderInfo(figi: "BBG000BM2FL9", priceHigh: 7.0, priceLow: 6.0)
+        let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
+        let date = Date().addingTimeInterval(5)
+        let request = req.redirect(to: "/makejobfinal?figi=\(orderInfo.figi)&priceHigh=\(orderInfo.priceHigh)&priceLow=\(orderInfo.priceLow)&jobIdentifier=\(jobIdentifier)")
+        
+        return req.eventLoop.makeSucceededFuture(request)
+        //return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }
     }
+    
+//    func makeJobFinal(_ req: Request) throws -> EventLoopFuture<String> {
+//        return req.leaf.render("makeorder")
+//    }
     
     func makeOrder(_ req: Request) throws -> EventLoopFuture<View> {
         return req.leaf.render("makeorder")
@@ -176,7 +184,20 @@ final class MarketServiceController {
     }
     
 }
-
-struct BalanceForm: Content {
-    var balance: Int
-}
+//        return req.client.post(URI(string: url), headers: headers, beforeSend: { (clientRequest) in
+//            print(req.parameters)
+//            var orderParam = OrderParam(lots: 5, operation: .buy)
+//            //balanceParam.balance = try req.content.decode(BalanceForm.self).balance ?? 123
+//            try clientRequest.content.encode(orderParam)
+//        }).flatMap { (cr) -> EventLoopFuture<View> in
+//            do {
+//                return try self.getPortfolio(req)
+//            } catch {
+                //return req.view.render("index")
+//            }
+//        }
+//
+//        let orderInfo = OrderInfo(figi: "BBG000BM2FL9", priceHigh: 7.0, priceLow: 6.0)
+//        let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
+//        let date = Date().addingTimeInterval(1)
+//        return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }

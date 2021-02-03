@@ -4,24 +4,15 @@
     <br>
     <form method="POST" action="/makejob">
         <div class="input-group">
-          <input type="text" name="balance" class="form-control">
-          <span class="input-group-btn">
-            <input class="btn btn-success" type="submit" value="FIGI"/>
-          </span>
-        </div>
-        <br>
-        <div class="input-group">
-          <input type="text" name="balance" class="form-control">
+          <input type="text" name="figi" class="form-control" placeholder="FIGI" value=#(figi)>
+          <input type="text" name="highPrice" class="form-control" placeholder="high price" value=#(highPrice)>
+          <input type="text" name="lowPrice" class="form-control" placeholder="low price" value=#(lowPrice)>
           <span class="input-group-btn">
             <input class="btn btn-success" type="submit"/>
           </span>
         </div>
-        <label for="start">Start date:</label>
-        <input type="date" id="start" name="trip-start"
-            value="2018-07-22"
-            min="2018-01-01" max="2018-12-31">
-    
-        <input id="datetime" type="datetime-local">
+        <label for="start">Check date:</label>
+        <input type="datetime-local" id="start" name="order-start" value=#(date)>
     </form>
 </body>
 </html>
