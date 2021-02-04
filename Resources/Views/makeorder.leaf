@@ -12,7 +12,7 @@
           </span>
         </div>
         <label for="start">Check date:</label>
-        <input type="datetime-local" id="start" name="order-start" value=#(date)>
+        <input type="datetime-local" id="start" name="date" value=#(date)>
     </form>
 </body>
 </html>

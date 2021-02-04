@@ -125,11 +125,17 @@ final class MarketServiceController {
 //        return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).flatMap { () -> EventLoopFuture<View> in
 //            return req.view.render("index")
 //        }
-        
-        let orderInfo = OrderInfo(figi: "BBG000BM2FL9", priceHigh: 7.0, priceLow: 6.0)
+        let makeOrderForm = try req.content.decode(MakeOrderForm.self)
+        let orderInfo = OrderInfo(figi: makeOrderForm.figi, priceHigh: Double(makeOrderForm.highPrice)!, priceLow: Double(makeOrderForm.lowPrice)!)
         let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
-        let date = Date().addingTimeInterval(5)
-        let request = req.redirect(to: "/makejobfinal?figi=\(orderInfo.figi)&priceHigh=\(orderInfo.priceHigh)&priceLow=\(orderInfo.priceLow)&jobIdentifier=\(jobIdentifier)")
+        //"2021-02-02T03:04"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        let date = dateFormatter.date(from: makeOrderForm.date!)
+        
+     
+        let request = req.redirect(to: "/makejobfinal?figi=\(orderInfo.figi)&priceHigh=\(orderInfo.priceHigh)&priceLow=\(orderInfo.priceLow)&jobIdentifier=\(jobIdentifier)&date=\(date!.timeIntervalSince1970)")
         
         return req.eventLoop.makeSucceededFuture(request)
         //return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }

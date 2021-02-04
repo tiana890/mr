@@ -63,20 +63,27 @@ func routes(_ app: Application) throws {
         return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }
     }
 
-    app.get("redis") { (req) -> EventLoopFuture<[String]> in
-        return try app.redis.send(command: "KEYS", with: [RESPValue(from: "job*")])
-            .flatMap({ (respValue) -> EventLoopFuture<[String]> in
-                return req.eventLoop.future(respValue.array!.map{ $0.string! })
-            })
-    }
+    app.get("jobs") { (req) -> EventLoopFuture<[String]> in
+        return app.redis.send(command: "KEYS", with: [RESPValue(from: "job*")])
+            .map({ (respValue) -> [String] in
+                return respValue.array!.map{ $0.string! }
+            }).flatMap{ (array) -> EventLoopFuture<[String]> in
+                do {
+                    return app.redis.send(command: "MGET", with: [RESPValue(from: "\(array.joined(separator: " "))")]).flatMap { (respValue) -> EventLoopFuture<[String]> in
+                        return req.eventLoop.future(respValue.array?.flatMap{ $0.string } ?? [])
+                    }
+                } catch {
+                    return req.eventLoop.future([])
+                }
+        }}
     
     app.get("makejobfinal") { (req) -> EventLoopFuture<String> in
-        if let figi = req.query[String.self, at: "figi"], let priceHigh = req.query[Double.self, at: "priceHigh"], let priceLow = req.query[Double.self, at: "priceLow"] {
+        if let figi = req.query[String.self, at: "figi"], let priceHigh = req.query[Double.self, at: "priceHigh"], let priceLow = req.query[Double.self, at: "priceLow"], let date = req.query[String.self, at: "date"]{
             print(figi)
             let orderInfo = OrderInfo(figi: figi, priceHigh: priceHigh, priceLow: priceLow)
             let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
-            let date = Date().addingTimeInterval(5)
-            return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }
+            let d = Date(timeIntervalSince1970: Double(date)!)
+            return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: d, id: jobIdentifier).map { "OK" }
         } else {
             return req.eventLoop.future("error")
         }
