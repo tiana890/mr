@@ -6,6 +6,7 @@ import Fluent
 
 func routes(_ app: Application) throws {
     var msc = MarketServiceController()
+    var jc = JobController()
     var websocketClient = WebSocketClient(figi: "")
     
 //    app.get { req -> EventLoopFuture<String>  i
@@ -49,6 +50,8 @@ func routes(_ app: Application) throws {
     
     app.post("makejob", use: msc.makeJob(_:))
     
+    app.post("deletejob", ":jobid", use: jc.deleteJob(_:))
+    
     app.get("makeorder") { req in
         return try msc.makeOrder(req)
     }
@@ -77,7 +80,7 @@ func routes(_ app: Application) throws {
                 let reducedKeys = keys.map{ $0.replacingOccurrences(of: "job:", with: "")}
                 for el in array {
                     if (reducedKeys.contains(el.id?.uuidString ?? "")) {
-                        jobs.jobList.append(JobItem(jobDescription: el.description))
+                        jobs.jobList.append(JobItem(jobId: el.id!.uuidString,jobDescription: el.description))
                     }
                 }
                 return req.leaf.render("jobs", JobsContext(jobs: jobs))

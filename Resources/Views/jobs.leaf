@@ -4,7 +4,16 @@
     <h2>Current jobs</h2>
     <ul>
         #for(job in jobs):
-        <li>#(job)</p></li>
+        <li>#(job.description)
+            <form method="POST" action="/deletejob/#(job.id)">
+                <span class="input-group-btn">
+                <input class="btn btn-success" type="submit"/>
+                </span>
+            <br>
+        </div>
+    </form>
+        </li>
+        
         #endfor
     </ul>
     <br>
