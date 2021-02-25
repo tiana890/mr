@@ -9,6 +9,7 @@
             <li><td><a href="/stocks">STOCK LIST</a></td></li>
             <li><td><a href="/portfolio">PORTFOLIO</a></td></li>
             <li><td><a href="/makeorder">MAKE ORDER</a></td></li>
+            <li><td><a href="/jobs">JOBS</a></td></li>
         </ul>
      #else:
         <h2>Client is not registered</h2>

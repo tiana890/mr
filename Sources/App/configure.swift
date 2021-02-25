@@ -12,10 +12,10 @@ public func configure(_ app: Application) throws {
     app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
     // register Redis provider
     
-    
     app.migrations.add(CreateProfile())
     app.migrations.add(CreateShare())
     app.migrations.add(CreateGlass())
+    app.migrations.add(CreateJob())
     
     app.logger.logLevel = .debug
     
@@ -24,9 +24,6 @@ public func configure(_ app: Application) throws {
     
 //    app.http.server.configuration.hostname = "172.31.35.26"
 //    app.http.server.configuration.port = 8080
-    
-    let orderJob = OrderJob()
-    app.queues.add(orderJob)
 
     try app.queues.startScheduledJobs()
     try app.queues.startInProcessJobs()

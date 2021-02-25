@@ -2,6 +2,7 @@ import Vapor
 import Leaf
 import Queues
 import Redis
+import Fluent
 
 func routes(_ app: Application) throws {
     var msc = MarketServiceController()
@@ -63,26 +64,36 @@ func routes(_ app: Application) throws {
         return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: date, id: jobIdentifier).map { "OK" }
     }
 
-    app.get("jobs") { (req) -> EventLoopFuture<[String]> in
+    app.get("jobs") { (req) -> EventLoopFuture<View> in
+        var keys = [String]()
         return app.redis.send(command: "KEYS", with: [RESPValue(from: "job*")])
             .map({ (respValue) -> [String] in
-                return respValue.array!.map{ $0.string! }
-            }).flatMap{ (array) -> EventLoopFuture<[String]> in
-                do {
-                    return app.redis.send(command: "MGET", with: [RESPValue(from: "\(array.joined(separator: " "))")]).flatMap { (respValue) -> EventLoopFuture<[String]> in
-                        return req.eventLoop.future(respValue.array?.flatMap{ $0.string } ?? [])
+                keys = respValue.array!.map{ $0.string! }
+                return keys
+            }).flatMap{ (array) -> EventLoopFuture<[JobEntity]> in
+                return JobEntity.query(on: req.db).all()
+            }.flatMap { (array) -> EventLoopFuture<View> in
+                let jobs = Jobs()
+                let reducedKeys = keys.map{ $0.replacingOccurrences(of: "job:", with: "")}
+                for el in array {
+                    if (reducedKeys.contains(el.id?.uuidString ?? "")) {
+                        jobs.jobList.append(JobItem(jobDescription: el.description))
                     }
-                } catch {
-                    return req.eventLoop.future([])
                 }
-        }}
+                return req.leaf.render("jobs", JobsContext(jobs: jobs))
+            }
+    }
     
     app.get("makejobfinal") { (req) -> EventLoopFuture<String> in
         if let figi = req.query[String.self, at: "figi"], let priceHigh = req.query[Double.self, at: "priceHigh"], let priceLow = req.query[Double.self, at: "priceLow"], let date = req.query[String.self, at: "date"]{
             print(figi)
+            let uuid = UUID()
             let orderInfo = OrderInfo(figi: figi, priceHigh: priceHigh, priceLow: priceLow)
-            let jobIdentifier = JobIdentifier(string: "job:\(UUID.init().uuidString)")
+            let jobIdentifier = JobIdentifier(string: "\(uuid.uuidString)")
             let d = Date(timeIntervalSince1970: Double(date)!)
+            
+            let jE = JobEntity(id: uuid, description: "figi: \(orderInfo.figi)")
+            jE.save(on: req.db)
             return req.queue.dispatch(OrderJob.self, orderInfo, maxRetryCount: 3, delayUntil: d, id: jobIdentifier).map { "OK" }
         } else {
             return req.eventLoop.future("error")
@@ -91,3 +102,12 @@ func routes(_ app: Application) throws {
 }
 
 
+/*return app.redis.send(command: "MGET", with: array.map{ RESPValue(from: $0)}).flatMap { (respValue) -> EventLoopFuture<View> in
+ let jobs = Jobs()
+ (respValue.array ?? []).forEach { (value) in
+     if (value.string != nil) {
+         jobs.jobList.append(JobItem(jobDescription: value.string!))
+     }
+ }
+ return req.leaf.render("jobs", JobsContext(jobs: jobs))
+}**/

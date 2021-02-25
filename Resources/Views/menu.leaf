@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<br>
+<br>
+<br>
+<footer>
+    <table cellspacing="15" cellpadding="10" alignment="left" rules="rows" rules="groups" frame="border" border-spacing="5 5" border-collapse="separate">
+        <tr>
+            <td><a href="/balance">BALANCE INFORMATION</a></td>
+            <td><a href="/orders">ORDERS LIST</a></td>
+            <td><a href="/stocks">STOCK LIST</a></td>
+            <td><a href="/portfolio">PORTFOLIO</a></td>
+            <td><a href="/makeorder">MAKE ORDER</a></td>
+        </tr>
+    </table>
+</footer>
+</html>
+

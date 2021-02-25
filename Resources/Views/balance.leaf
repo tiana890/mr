@@ -15,5 +15,6 @@
           </span>
         </div>
     </form>
+    #extend("menu")
 </body>
 </html>

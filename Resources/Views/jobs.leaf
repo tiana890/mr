@@ -1,8 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Marina on 25.01.2021.
-//
-
-import Foundation
+<!DOCTYPE html>
+<html>
+    <h1>Jobs (sandbox)</h1>
+    <h2>Current jobs</h2>
+    <ul>
+        #for(job in jobs):
+        <li>#(job)</p></li>
+        #endfor
+    </ul>
+    <br>
+    <br>
+</body>
+</html>
